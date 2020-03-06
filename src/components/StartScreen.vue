@@ -9,9 +9,7 @@
         align="center"
         justify="center" id="desc">
 		<p class="font-weight-thin">
-			Lorem ipsum dolor sit amet consectetur adipisicing elit. Quam, possimus. <br>
-			Voluptate veniam dolorum quas ipsam cupiditate at tempora libero, <br>
-			perferendis reiciendis saepe doloremque ipsum nihil nisi velit quod tenetur voluptatum.
+			You can start the decision-making by pressing start!
 		</p>
 	</v-row>
 	

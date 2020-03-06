@@ -1,15 +1,22 @@
-/* eslint-disable vue/require-v-for-key */
 <template>
 	<div class="small">
 		<v-btn class="mx-2" fixed fab dark color="primary" @click="help = !help">
 			<v-icon dark>mdi-help</v-icon>
 		</v-btn>
 		<h1 class="text-center font-weight-thin">Your best choice is {{winnerChoice}}!</h1>
-		<p class="text-center font-weight-thin">It is {{winPercentage}}% better than {{looserChoice}}</p>
-		<div class="text-center font-weight-thin winner" v-if="winnerChoice == 'PWA'">
+		<p class="text-center font-weight-thin">It is {{winPercentage1}}% better than {{looserChoice1}} and {{winPercentage2}}% better than {{looserChoice2}}</p>
+		<div class="text-center font-weight-thin winner" v-if="winnerChoice == 'pwa'">
 			<p>
-				Functions that are not possible to implement in a PWA are: 
+				Functions that are not possible to implement in a pwa are: 
 				<span v-for="(val, index) in functions" v-bind:key="val"> {{val}} <span v-if="index != (functions.length - 1)"> and</span></span>
+			</p>
+		</div>
+		<div>
+			<p>
+				The height differences between the bars for a certain category such as “UX” is based on a set ratio between the alternative development tools. 
+				Meaning that for UX, Native will always be the best alternative while PWA the worst. <br/>
+				The order in which you rank the categories and the answers you gave previously are combined do determine the impact of each category on the result as a whole.<br/>	
+				This result will give you the recommended development tool along with how high it ranked compared to the other tools.
 			</p>
 		</div>
 		<br>
@@ -44,8 +51,10 @@
 		datacollection: null,
 		functions: [],
 		winnerChoice: "",
-		looserChoice: "",
-		winPercentage: 0
+		looserChoice1: "",
+		winPercentage1: 0,
+		looserChoice2: "",
+		winPercentage2: 0,
       }
 	},
 	created() {
@@ -64,15 +73,22 @@
 				labels: ["Budget", "UX", "Functions", "Reachability", "Maintenance", "Time to develop", "Performance"],
 				datasets: [
 					{
-						label: 'PWA',
+						label: 'pwa',
 						backgroundColor: '#FFA500',
-						data: this.result.PWA.data
+						data: this.result.pwa.data
 					}, {
-						label: 'Native',
+						label: 'native',
 						backgroundColor: '#9999ff',
-						data: this.result.Native.data
+						data: this.result.native.data
+					}, {
+						label: 'react',
+						backgroundColor: '#FF0000',
+						data: this.result.react.data
 					}
 				]
+			},
+			this.options = {
+				type: "horizontalBar"
 			}
 		},
 		calculateScore(scoreArray, normalizedWeights){
@@ -81,26 +97,40 @@
 			return {data: this.scores, sumScore: this.sumScore};
 		},
 		calculateScores(){
-			this.pwa = [10, 6, 2, 10, 5, 10, 7]
+			this.pwa = [10, 6, 2, 10, 6, 10, 7]
 			this.native = [7, 10, 10, 5, 10, 5, 10]
+			this.react = [9, 8, 9, 8, 4, 7, 8.5]
 			this.weights = this.addQuestionImpact(this.$store.state.rankingScores)
 			this.weightSum = this.weights.reduce((weight1, weight2) => weight1 + weight2, 0);
 			this.normalizedWeights = this.weights.map(weight => weight / this.weightSum)
 			this.finalScore = {
-				PWA: this.calculateScore(this.pwa, this.normalizedWeights), 
-				Native: this.calculateScore(this.native, this.normalizedWeights)
-				}
-			if(this.finalScore.PWA.sumScore > this.finalScore.Native.sumScore){
+				pwa: this.calculateScore(this.pwa, this.normalizedWeights), 
+				native: this.calculateScore(this.native, this.normalizedWeights),
+				react: this.calculateScore(this.react, this.normalizedWeights)
+			}
+			
+			if(this.finalScore.pwa.sumScore>this.finalScore.native.sumScore && this.finalScore.pwa.sumScore>this.finalScore.react.sumScore){
 				this.winnerChoice = "PWA";
-				this.looserChoice = "Native";
-				this.winPercentage = this.calculateWinPercentage(this.finalScore.PWA.sumScore, this.finalScore.Native.sumScore)
-			} else {
+				this.looserChoice1 = "Native";
+				this.winPercentage1 = this.calculateWinPercentage(this.finalScore.pwa.sumScore, this.finalScore.native.sumScore)
+				this.looserChoice2 = "React Native";
+				this.winPercentage2 = this.calculateWinPercentage(this.finalScore.pwa.sumScore, this.finalScore.react.sumScore)
+			}else if(this.finalScore.native.sumScore>this.finalScore.pwa.sumScore && this.finalScore.native.sumScore>this.finalScore.react.sumScore){
 				this.winnerChoice = "Native";
-				this.looserChoice = "PWA";
-				this.winPercentage = this.calculateWinPercentage(this.finalScore.Native.sumScore, this.finalScore.PWA.sumScore)
+				this.looserChoice1 = "PWA";
+				this.winPercentage1 = this.calculateWinPercentage(this.finalScore.native.sumScore, this.finalScore.pwa.sumScore)
+				this.looserChoice2 = "React Native";
+				this.winPercentage2 = this.calculateWinPercentage(this.finalScore.native.sumScore, this.finalScore.react.sumScore)
+			}else if(this.finalScore.react.sumScore>this.finalScore.pwa.sumScore && this.finalScore.react.sumScore>this.finalScore.native.sumScore){
+				this.winnerChoice = "React Native";
+				this.looserChoice1 = "PWA";
+				this.winPercentage1 = this.calculateWinPercentage(this.finalScore.react.sumScore, this.finalScore.pwa.sumScore)
+				this.looserChoice2 = "Native";
+				this.winPercentage2 = this.calculateWinPercentage(this.finalScore.react.sumScore, this.finalScore.native.sumScore)
 			}
 			return this.finalScore;
 		},
+
 		addQuestionImpact(weights){
 			this.form = this.$store.state.formQuestions
 			if(this.form.functionsNeeded.length > 0){

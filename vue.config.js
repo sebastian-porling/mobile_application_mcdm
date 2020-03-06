@@ -2,8 +2,8 @@ module.exports = {
   "transpileDependencies": [
     "vuetify"
   ],
-  publicPath:'',
-  pwa: {
+  publicPath:'/',
+  /*pwa: {
     name: 'MCDM for mobile applications',
     themeColor: '#4DBA87',
     msTileColor: '#000000',
@@ -17,5 +17,5 @@ module.exports = {
       swSrc: 'dev/sw.js',
       // ...other Workbox options...
     }
-  }
+  }*/
 }

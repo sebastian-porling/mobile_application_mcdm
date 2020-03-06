@@ -4,7 +4,7 @@
 		<v-icon dark>mdi-help</v-icon>
 	</v-btn>
     <h1 class="font-weight-thin text-center">Ranking</h1>
-    <p class="text-center">Here you will rank the different criteria, try to seperate them as much as possible.</p>
+    <p class="text-center">Here you rank the different criteria based on how important they are for your project. Try to seperate them as much as possible.</p>
     <vue-slider
       v-model="ranking"
       :order="false"

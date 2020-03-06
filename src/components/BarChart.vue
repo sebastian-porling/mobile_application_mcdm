@@ -10,7 +10,14 @@ export default {
   mounted() {
     // this.chartData is created in the mixin.
     // If you want to pass options please create a local options object
-    this.renderChart(this.chartData, this.options);
+    this.options1 = {
+      scales: {
+            yAxes: [{
+                display: false
+            }]
+        }
+    };
+    this.renderChart(this.chartData, this.options1);
   }
 };
 </script>
