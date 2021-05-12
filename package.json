@@ -14,7 +14,7 @@
   "dependencies": {
     "@capacitor/cli": "^1.0.0-alpha.38",
     "@capacitor/core": "^1.0.0-alpha.38",
-    "chart.js": "^2.9.3",
+    "chart.js": "^2.9.4",
     "core-js": "^3.6.4",
     "vue": "^2.6.11",
     "vue-chartjs": "^3.5.0",
